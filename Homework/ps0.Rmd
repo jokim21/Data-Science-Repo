@@ -3,9 +3,9 @@ title: 'STAT 231: Problem Set 0'
 author: "Joshua Kim"
 date: "due by 5 PM on Friday, February 19"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 This problem set is a modified version of a lab developed by Mine Cetinkaya-Rundel.
@@ -118,7 +118,7 @@ Calculate the correlation coefficient between `x` vs. `y` for the `star` dataset
 > RESPONSE: The star dataset has a negative correlation of -.0630. This is very similar to the dino dataset that we worked with before.
 
 ```{r}
-star <- datasaurus %>% filter(dataset == "star") 
+star <- datasaurus_dozen %>% filter(dataset == "star") 
 star %>%
   summarize(r = cor(x, y))
 ```
