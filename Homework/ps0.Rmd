@@ -118,7 +118,7 @@ Calculate the correlation coefficient between `x` vs. `y` for the `star` dataset
 > RESPONSE: The star dataset has a negative correlation of -.0630. This is very similar to the dino dataset that we worked with before.
 
 ```{r}
-star <- datasaurus_dozen %>% filter(dataset == "star") 
+star <- datasaurus %>% filter(dataset == "star") 
 star %>%
   summarize(r = cor(x, y))
 ```
@@ -140,18 +140,21 @@ ggplot(data = star, mapping = aes(y = y, x = x)) +
 
 Calculate the correlation coefficient between `x` vs. `y` for the `circle` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. How does this value compare to the correlation coefficients from the other two datasets?
 
-> RESPONSE: 
+> RESPONSE: The coeffecient is negative and is -.0683. It is not so different from the other datasets as well.
 
 ```{r}
-
+circle <- datasaurus_dozen %>% filter(dataset == "circle") 
+circle %>%
+  summarize(r = cor(x, y))
 ```
 
 Then, plot `y` versus `x` for the `circle` dataset.  Does the plot look the same as either plot from the other two datasets?
 
-> RESPONSE:
+> RESPONSE: The plot is now a circle or closer to a football compared to a star or a dinosaur.
 
 ```{r}
-
+ggplot(data = circle, mapping = aes(y = y, x = x)) +
+  geom_point()
 ```
 
 *You should pause again, commit changes with the commit message "Added answer for Ex 4", and push.*
@@ -180,7 +183,7 @@ datasaurus_dozen %>%
 
 What do you notice?  Is the correlation coefficiant an appropriate summary for any of these datasets?  Why or why not?
 
-> RESPONSE:
+> RESPONSE: the correlation coeffcient of the summaries are all generally extremely close but the graphs look extremely different in shape. Therefore it is difficult to say that the correlation coefficient is an appropriate sumary for these data sets. We would believe that they are similar graphs if we only had information about the correlation coefficient. 
 
 
 *You should pause again, commit changes with the commit message "Added answer for Ex 5", and push.*
