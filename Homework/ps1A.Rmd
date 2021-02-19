@@ -29,7 +29,10 @@ Steps to proceed:
 
 ```{r, setup, include=FALSE}
 # Load packages here 
-library(mdsr)   
+library(mdsr)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
 
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
@@ -47,7 +50,7 @@ Figure 3.3 in Section 3.1.1 shows a scatterplot that uses both location and labe
 data(CIACountries)
 
 # define the plot object
-g <- ggplot(data = CIACountries, aes(y = gdp, x= educ))
+g <- ggplot (data = CIACountries, aes(y = gdp, x= educ))
 geom_point(size = 3)
 
 # print the plot 
@@ -58,7 +61,11 @@ g + geom_text(aes(label = country, color = net_users), size =3)
 Now, update the plot with more informative labels.  Label the x-axis "% of GDP spent on education" and the y-axis "Gross Domestic Product (GDP)".  Hint: see Section 3.2.2 for an example of one way to label the axes.
 
 ```{r}
+g <- ggplot(data = CIACountries, aes(y = gdp, x= educ)) +
+  xlab("% of GDP Spent on Education") +
+  ylab("Gross Domestic Product (GDP)")
 
+g + geom_text(aes(label = country, color = net_users), size =3)
 
 ```
 
@@ -66,14 +73,27 @@ Now, update the plot with more informative labels.  Label the x-axis "% of GDP s
 Next, move the legend so that it's located on the top of the plot as opposed to the right of the plot.  Hint: see Section 3.1.4 for an example on how to change the legend position.
 
 ```{r}
+g <- ggplot(data = CIACountries, aes(y = gdp, x= educ)) +
+  xlab("% of GDP Spent on Education") +
+  ylab("Gross Domestic Product (GDP)") +
+  theme(legend.position = "top")
+  
 
+g + geom_text(aes(label = country, color = net_users), size =3)
 ```
 
 ### d.
 Lastly, Section 3.1.2 discusses *scale*, and demonstrates how to display GDP on a logarithmic scale to better discern differences in GDP.  Update the figure so GDP is on a log10 scale.  
 
 ```{r}
+g <- ggplot(data = CIACountries, aes(y = gdp, x= educ)) +
+  xlab("% of GDP Spent on Education") +
+  ylab("Gross Domestic Product (GDP)") +
+  theme(legend.position = "top") + 
+  coord_trans(y = "log10")
+  
 
+g + geom_text(aes(label = country, color = net_users), size =3)
 ```
 
 
@@ -83,7 +103,7 @@ Lastly, Section 3.1.2 discusses *scale*, and demonstrates how to display GDP on 
 ### a.
 Consider Figure 3.7 in Section 3.2.1.  What does `reorder(drg, mean_charge)` do?  Recreate the plot, but use `x = drg` instead of `x = reorder(drg, mean_charge)`.  What happens?
 
-> ANSWER: 
+> ANSWER: `reorder(drg, mean_charge)` literally reorders the plot to be in order of average cost for each medical procedure. When I change it to x=drg, the graph is no longer in order of smallest to biggest average cost of the procedure, but the graph instead shows the average price for each medical procedure based on their name and number. 
 
 ```{r}
 data(MedicareCharges)
@@ -92,43 +112,73 @@ ChargesNJ <- MedicareCharges %>%
   filter(stateProvider == "NJ")
 
 # create the plot object
-p <- 
+p <- ggplot(data = ChargesNJ, aes(x = drg, y = mean_charge)) +
+  geom_col(fill = "gray") +
+  ylab("Statewide Average Charges ($)") + 
+  xlab("Medical Procedure (DRG)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = rel(0.5)))
   
   
 # print the plot
-p
+p + geom_col(data = ChargesNJ, size = 1)
 ```
 
 ### b.
 Replace `x = drg` with `x = reorder(drg, mean_charge)`, but also remove the `theme()` line.  Now what happens?  What was the purpose of the `theme()` line?  Hint: You may need to knit the document and look at the pdf to better observe what's happening.
 
-> ANSWER:  
+> ANSWER:  By removing the theme code, we are able to see that the text on the x axis become much more crowded because the text is no longer vertical, but horizontal.
 
 ```{r}
+data(MedicareCharges)
+ChargesNJ <- MedicareCharges %>% 
+  ungroup() %>%
+  filter(stateProvider == "NJ")
 
+# create the plot object
+p <- ggplot(data = ChargesNJ, aes(x = drg, y = mean_charge)) +
+  geom_col(fill = "gray") +
+  ylab("Statewide Average Charges ($)") + 
+  xlab("Medical Procedure (DRG)")
+  
+  
+# print the plot
+p + geom_col(data = ChargesNJ, size = 1)
 ```
-
 
 \newpage 
 # 3. Historical baby names
 
 As you read through (and, better yet -- code along with (not required, but useful practice!)) -- the extended example on historical baby names in section 3.3.1, write down two questions you have about any of the R code used in that example.  (Your questions could be about what a specific part of the code -- ggplot or not -- is actually doing, or a more general question about any of the commands used.)  Please be thoughtful about your questions; we will use them (anonymously) in an exercise in class this week.
 
-> ANSWER: 
+> ANSWER: Regarding the Hmisc package, I do not really understand why .5 would give the median, and what would it would represent if we changed the value to something like .2. My best guess is that this is the percentile but I wonder how we can find the median and mean since they are likely different values. 
+In addition, I had questions about whether we needed to use libary('package') everytime we run code. I've also learned that the function %>% is defined by dplyr, so I was wondering if we need to run the dplyr package everytime as well. It also makes me wonder what are some other functions that are reliant on specific packages. I was also a little bit unsure of the ifelse function, which I believe highlights one bar, but I would appreciate a bit more explanation on this function as well.
 
 ```{r}
-# to get you started following along . . .
+# to get you started following along
+
+library(mdsr)
+library(dplyr)
 library(babynames)
+library(Hmisc)
+
+
 BabynamesDist <- make_babynames_dist()
 
 joseph <- BabynamesDist %>%
   filter(name == "Joseph" & sex == "M")
 
 name_plot <- ggplot(data = joseph, aes(x = year)) +
-  geom_bar(stat = "identity", aes(y = count_thousands*alive_prob)
-           , fill = "#b2d7e9", color = "white")
+  geom_bar(stat = "identity", aes(y = count_thousands * alive_prob), fill = "#b2d7e9", color = "white") + 
+  geom_line(aes(y = count_thousands), size = 2) +
+  ylab("Number of People (thousands)") + 
+  xlab("Year")
 
-name_plot
+many_names_plot <- name_plot + 
+  facet_grid(name ~ sex)
+mnp <- many_names_plot %+% filter(
+  BabynamesDist, 
+  name %in% c("Jessie", "Marion", "Jackie"))
+mnp
 ```
 
 
