@@ -1,6 +1,6 @@
 ---
 title: 'STAT 231: Problem Set 1A'
-author: "YOUR NAME HERE"
+author: "Joshua Kim"
 date: "due by 5 PM on Monday, February 22"
 output: pdf_document
 ---
@@ -47,10 +47,11 @@ Figure 3.3 in Section 3.1.1 shows a scatterplot that uses both location and labe
 data(CIACountries)
 
 # define the plot object
-g <- 
-  
+g <- ggplot(data = CIACountries, aes(y = gdp, x= educ))
+geom_point(size = 3)
+
 # print the plot 
-g
+g + geom_text(aes(label = country, color = net_users), size =3)
 ```
 
 ### b.
