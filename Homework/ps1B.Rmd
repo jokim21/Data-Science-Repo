@@ -1,8 +1,10 @@
 ---
-title: "STAT 231: Problem Set 1B"
+title: 'STAT 231: Problem Set 1B'
 author: "Joshua Kim"
 date: "due by 5 PM on Friday, February 26"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 Series B homework assignments are designed to help you further ingest and practice the material covered in class over the past week(s).  You are encouraged to work with other students, but all code must be written by you and you must indicate below who you discussed the assignment with (if anyone).  
@@ -63,12 +65,12 @@ c. Critique and/or praise the visualization choices made by the designer.  Do th
 
 Explain why the following command does not color the data points blue, then write down the command that will turn the points blue.
 
-> ANSWER:
+> ANSWER: The following command does not color the data points blue because the function color ="blue" was within the aesthetics, which does not refer to the geompoint function. Thus by changing it outside of the aesthtics command, we are able to change the points into blue.
 
 ```{r}
 library(ggplot2)
 ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
+  geom_point(mapping = aes(x = displ, y = hwy), color ='blue')
 ```
 
 
@@ -77,9 +79,20 @@ ggplot(data = mpg) +
 
 Use the `MLB_teams` data in the `mdsr` package to create an informative data graphic that illustrates the relationship between winning percentage and payroll in context. What story does your graph tell?
 
-> ANSWER:
+> ANSWER: This graph shows the relationship between payroll and win percentage with each point referring to a unique year and team. We can see that there is a positive relationship between payroll and win percentage, but we also observe that there are specific teams that do even better with more payroll.
 
 ```{r}
+library(mdsr)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+
+MLB_teamsWPPR <- ggplot(MLB_teams, aes(x = WPct, y = payroll)) +
+  xlab("Win Percentage") +
+  ylab("Payroll") + 
+  geom_point (aes(size=1, color = teamID))
+
+MLB_teamsWPPR
 
 ```
 
@@ -92,6 +105,15 @@ Using data from the `nasaweather` package, use the `geom_path()` function to plo
 Note: be sure you load the `nasaweather` package and use the `storms` dataset from that package!
 
 ```{r}
+library(nasaweather)
+
+ggplot(nasaweather::storms, aes(x = long, y = lat)) + 
+  geom_path(aes(x = long, y = lat, colour = name)) +
+  facet_wrap(~year) + 
+  scale_color_discrete(guide="none") +
+  xlab("Longitude") +
+  ylab("Latitude")
+
 
 ```
 
@@ -107,6 +129,6 @@ For the calendar assignment:
 
 Note that you are not wed to the ideas you record here.  The visualizations and table can change before your final submission.  But, I want to make sure your plan aligns with your questions and that you're on the right track.
 
-> ANSWER:
+> ANSWER: I want to answer 'How do I spend my time on my business vs work vs school vs leisure on each day?' I would also like to further segment that data, and learn how I am spending my time doing different types of work I do for my E-commerce store so that I can better learn to budget my time and maximize effeciency of my time spent. I believe that I can create a segmented bar graph faceted by day on a cartesian plane. This way I can visulize how I spent each day of the week. Visual cues can be color for category of time spent(business vs work vs school vs leisure), length of the bar will indicate time spent. Meanwhile a second visualization could be a line graph on a cartesian plane. With time spent on the y axis and days on the x axis, I can visualize how I spent my time on my business each day without needing to facet. Visual cues include color for each category and angle for direction of time spent. One table idea that I have is to have the columns be business vs work vs school vs leisure while the rows to be individual days. This will help me understand the exact time that I spent each day.
 
  
