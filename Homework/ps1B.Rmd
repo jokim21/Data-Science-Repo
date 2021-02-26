@@ -3,6 +3,7 @@ title: 'STAT 231: Problem Set 1B'
 author: "Joshua Kim"
 date: "due by 5 PM on Friday, February 26"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 ---
