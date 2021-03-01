@@ -86,12 +86,13 @@ Getting NAs for `avg_arr_delay`?  That happens when some observations are missin
 
 flightsJoined2 %>%
   filter(is.na(arr_delay)==FALSE) %>%
-  summarise(
-    name = name,
+  group_by(name) %>%
+  summarize(
     N = n(),
     avg_arr_delay = mean(arr_delay),
     avg_dist_km = mean(distance_km)) %>%
   arrange(desc(avg_arr_delay))
+
 
 ```
 
@@ -114,9 +115,16 @@ babynames2
 ### b. 
 Following the code presented in Section 5.2.4, create a dataset called `BabyNarrow` that summarizes the total number of people with each name (born between 2000 and 2017), grouped by sex. (Hint: follow the second code chunk on page 102, but don't filter on any particular names.)  Look at the dataset.  Why have we called this dataset "narrow"?
 
-> ANSWER:
+> ANSWER: We call this data set narrow because it is more tall and narrow with only 3 columns but 591,925 rows. It is now tidy data.
 
 ```{r}
+BabyNarrow <- babynames2 %>%
+  group_by(sex, name) %>%
+    summarize(
+      total = sum(n)
+    )
+
+BabyNarrow
 
 ```
 
@@ -131,6 +139,16 @@ Now, following the code chunk presented on page 103*, put the data into a wide f
 # this will bring up "Pivoting Introduction" vignette in your Help tab
 #vignette("pivot")
 
+BabyWide <- BabyNarrow %>%
+  pivot_wider(
+    names_from = sex, 
+    values_from = total) %>%
+  filter(M > 10000, F > 10000) %>%
+  mutate(ratio = pmin(M/F, F/M)) %>%
+  arrange(desc(ratio))
+
+BabyWide
+  
 ```
 
 ### d.
@@ -139,7 +157,6 @@ Lastly, use the `gather()` function (or the `pivot_longer()` function) to put th
 > ANSWER: 
 
 ```{r}
-
 
 ```
 
