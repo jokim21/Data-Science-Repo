@@ -43,6 +43,16 @@ knitr::opts_chunk$set(
 In Section 4.3.1, the `flights` and `carrier` tables within the `nycflights13` package are joined together.  Recreate the `flightsJoined` dataset from page 80.  Hint: make sure you've loaded the `nycflights13` package before referring to the data tables (see code on page 79).
 
 ```{r}
+library(nycflights13)
+library(mdsr)   
+library(dplyr)
+library(tidyverse)
+
+glimpse(flights)
+
+flightsJoined <- flights %>% 
+  inner_join(airlines, by = c("carrier" = "carrier"))
+glimpse(flightsJoined)
 
 ```
 
@@ -58,7 +68,12 @@ Hint: see examples in Section 4.1 for subsetting datasets and creating new varia
 
 ```{r}
 
+flightsJoined2 <- flightsJoined %>%
+  mutate(distance_km = distance/1.6) %>%
+  filter(distance_km > 500) %>%
+  select(name, flight, arr_delay, distance_km)
 
+flightsJoined2
 ```
 
 
