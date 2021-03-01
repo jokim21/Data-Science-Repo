@@ -78,7 +78,7 @@ flightsJoined2
 
 
 ### c.
-Lastly, using the functions introduced in Section 4.1.4, compute the number of flights (call this `N`), the average arrival delay (call this `avg_arr_delay`), and the average distance in kilometers (call this `avg_dist_km`) among these flights with distances less than 500 km (i.e. working off of `flightsJoined2`) *grouping by the carrier name*.  Sort the results in descending order based on `avg_arr_delay`.
+Lastly, using the functions introduced in Section 4.1.4, compute the number of flights (call this `N`), the average arrival delay (call this `avg_arr_delay`), and the average distance in kilometers (call this `avg_dist_km`) among these flights with distances less than 500 km (i.e. working off of `flightsJoined2`) *grouping by the carrier name*.  Sort the results in descending order based on `avg_arr_delay`.er 4
 
 Getting NAs for `avg_arr_delay`?  That happens when some observations are missing that data.  Before grouping and summarizing, add a line to exclude observations with missing arrival delay information using `filter(is.na(arr_delay)==FALSE)`.
 
@@ -103,9 +103,12 @@ flightsJoined2 %>%
 Working with the `babynames` data table in the `babynames` package, create a dataset `babynames2` that only includes years 2000 to 2017.
 
 ```{r}
+library(babynames)
 
+babynames2 <- babynames %>%
+  filter(year < 2018 & year > 1999)
 
-
+babynames2
 ```
 
 ### b. 
