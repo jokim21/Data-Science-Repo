@@ -47,25 +47,34 @@ Use the `Pitching` data frame from the `Lahman` package to identify every pitche
 
 a. How many pitchers meet this criteria?  
 
-> ANSWER: There are 0 pitchers that meet this criteria.
+> ANSWER: There are 10 pitchers that meet this criteria.
 
 ```{r}
 library(Lahman)
 
 goodpitchers <- Pitching %>%
   select(playerID, W, SO) %>%
-  filter(W >= 300 & SO >= 3000)
+  group_by(playerID) %>%
+  summarize(
+    Wins = sum(W),
+    StrikeOuts = sum(SO)) %>%
+  filter(Wins >= 300 & StrikeOuts >= 3000)
 
 goodpitchers
-
 ```
 
 b. Which of these pitchers had the most accumulated strikeouts?  How many strikeouts had he accumulated?  What is the most strikeouts he had in one season?
 
-> ANSWER: 
+> ANSWER: We can observe that Ryanno01 accumulated the most strikeouts with 5714 accumulated strikeouts over his career. His best year was in 1973 where he was able to achieve 383 strikeouts in one season.
 
 ```{r}
+goodpitchers %>%
+  arrange(desc(StrikeOuts))
 
+Pitching %>% 
+  filter(playerID == "ryanno01") %>%
+  select(yearID, SO) %>%
+  arrange(desc(SO))
 ```
 
 
@@ -74,9 +83,21 @@ b. Which of these pitchers had the most accumulated strikeouts?  How many strike
 
 a. The Violations data set in the `mdsr` package contains information regarding the outcome of health inspections in New York City.  Use these data to calculate the median violation score by zipcode and dba for zipcodes in Manhattan.  What pattern (if any) do you see between the number of inspections and the median score?  Generate a visualization to support your response.  
 
-> ANSWER:  
+> ANSWER: Most of the points are located closer to the coordination point (0.0), but there seems to be an intersting relationship between high inspections and a lower median violation score. there is also a high concentration of violation scores of 15 and under and high volume of inspections. Meanwhile the right of the graph shows some restraunts that received high violation scores with a low amount of inspections. 
 
 ```{r}
+MedianViolation <- Violations %>%
+  filter(boro =="MANHATTAN", is.na(score)==FALSE) %>%
+  group_by(zipcode, dba) %>%
+  summarize(
+    NumberofInspections = n(),
+    MedianViolationScore = median(score))
+
+MedianViolation
+
+g <- ggplot(data = MedianViolation, aes(y = NumberofInspections, x = MedianViolationScore))
+
+g + geom_point(size = 2)
 
 ```
 
