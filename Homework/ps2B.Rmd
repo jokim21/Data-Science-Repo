@@ -97,7 +97,8 @@ MedianViolation
 
 g <- ggplot(data = MedianViolation, aes(y = NumberofInspections, x = MedianViolationScore))
 
-g + geom_point(size = 2)
+g + geom_point(size = 2) +
+  
 
 ```
 
@@ -106,7 +107,13 @@ b.  In your visualization in part (a), there should be at least a few points tha
 (Can't remember how to create a curved arrow in `ggplot`?  The answers to [this question](https://stackoverflow.com/questions/38008863/how-to-draw-a-nice-arrow-in-ggplot2/61383034) on Stack Exchange may help.  Can't remember how to add text to the plot in `ggplot`?  Check out the text examples with `annotate` [here](https://ggplot2.tidyverse.org/reference/annotate.html), or answers to [this question](https://stackoverflow.com/questions/14351608/color-one-point-and-add-an-annotation-in-ggplot2/14351810) that use `geom_text`.)
 
 ```{r}
+MedianViolation %>%
+  filter(MedianViolationScore > 100)
 
+g + geom_point(size = 2) +
+  geom_segment(aes(x = 90, y = 75, xend = 110, yend = 30), 
+               arrow = arrow()) +
+  annotate("text", x = 90, y = 85, label = "Roxy Diner")
 
 ```
 
