@@ -86,6 +86,7 @@ a. The Violations data set in the `mdsr` package contains information regarding 
 > ANSWER: Most of the points are located closer to the coordination point (0.0), but there seems to be an intersting relationship between high inspections and a lower median violation score. there is also a high concentration of violation scores of 15 and under and high volume of inspections. Meanwhile the right of the graph shows some restraunts that received high violation scores with a low amount of inspections. 
 
 ```{r}
+
 MedianViolation <- Violations %>%
   filter(boro =="MANHATTAN", is.na(score)==FALSE) %>%
   group_by(zipcode, dba) %>%
@@ -97,7 +98,7 @@ MedianViolation
 
 g <- ggplot(data = MedianViolation, aes(y = NumberofInspections, x = MedianViolationScore))
 
-g + geom_point(size = 2) +
+g + geom_point(size = 2)
   
 
 ```
@@ -123,9 +124,8 @@ g + geom_point(size = 2) +
 
 Generate the code to convert the data frame shown with this problem in the textbook (on page 130, and shown below) to wide format (i.e., the result table).  Hint: use `gather()` in conjunction with `spread()`; OR `pivot_longer()` in conjunction with `pivot_wider()`.
 
-![](images/mdsr_ex_5_7.jpg)
-
 ```{r}
+
 FakeDataLong <- data.frame(grp = c("A","A","B", "B")
                            , sex = c("F", "M", "F", "M")
                            , meanL = c(0.22, 0.47, 0.33, 0.55)
