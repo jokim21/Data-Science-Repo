@@ -47,25 +47,34 @@ Use the `Pitching` data frame from the `Lahman` package to identify every pitche
 
 a. How many pitchers meet this criteria?  
 
-> ANSWER: There are 0 pitchers that meet this criteria.
+> ANSWER: There are 10 pitchers that meet this criteria.
 
 ```{r}
 library(Lahman)
 
 goodpitchers <- Pitching %>%
   select(playerID, W, SO) %>%
-  filter(W >= 300 & SO >= 3000)
+  group_by(playerID) %>%
+  summarize(
+    Wins = sum(W),
+    StrikeOuts = sum(SO)) %>%
+  filter(Wins >= 300 & StrikeOuts >= 3000)
 
 goodpitchers
-
 ```
 
 b. Which of these pitchers had the most accumulated strikeouts?  How many strikeouts had he accumulated?  What is the most strikeouts he had in one season?
 
-> ANSWER: 
+> ANSWER: We can observe that Ryanno01 accumulated the most strikeouts with 5714 accumulated strikeouts over his career. His best year was in 1973 where he was able to achieve 383 strikeouts in one season.
 
 ```{r}
+goodpitchers %>%
+  arrange(desc(StrikeOuts))
 
+Pitching %>% 
+  filter(playerID == "ryanno01") %>%
+  select(yearID, SO) %>%
+  arrange(desc(SO))
 ```
 
 
