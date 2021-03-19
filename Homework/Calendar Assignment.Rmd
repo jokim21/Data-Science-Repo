@@ -1,0 +1,44 @@
+---
+title: "Calendar Assignment"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Include your import of the data and preliminary wrangling here
+Describe your question(s) here. Briefly describe your data collection process, including how you defined
+variables of interest.
+
+# The 2 questions that I wanted to answer was 'How do I spend my time split between sleep, eating, leisure, work and school time?' and 'How do I split my time when operating my business?' Therefore, I collected data in my calendar and recorded every couple hours. I chose mainly sleep, eat, school, leisure, Numins work, exercise, and errands. I further segmented Numins time by social media, shipping, and website updating. I included cooking time inside eating time and combined class and study time as school time. Errands included going to get groceries, vet, and miscellaneous work unable to be classified as leisure. 
+
+```{r cars}
+library(tidyverse)
+library(lubridate)
+library(ical)
+
+my_calendar <- (file = "C:/Users/Admin/Downloads/Senior Year/Data Science/calendar Assignment/jokim21@amherst.edu.ics") %>%
+mutate(start_datetime = with_tz(start, tzone = "America/New_York")
+, end_datetime = with_tz(end, tzone = "America/New_York")
+, length_sec = end_datetime - start_datetime
+, date = floor_date(start_datetime, unit = "day"))
+```
+
+
+Describe what information is conveyed through data visualization #1 (that you’ll create below) here.
+
+# Write your code to create data visualization #1 here.
+# Be sure to label your axes and include a title to give your data's context.
+
+Describe what information is conveyed through data visualization #2 (that you’ll create below) here.
+# Write your code to create data visualization #2 here.
+# Be sure to label your axes and include a title to give your data's context.
+
+Describe what information is conveyed through the table (that you’ll create below) here.
+# write your code to create the table here
+# if you want to make your table's appearance nicer, check out:
+# the xtable package (https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf); or
+# the kable function in the knitr package (https://bookdown.org/yihui/rmarkdown-cookbook/kable.html)
+
+To conclude, briefly summarize what you found in response to the questions posed here.
