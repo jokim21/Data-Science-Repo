@@ -100,7 +100,7 @@ The following three commands look similar, but return different results.
 
 In words, explain what overall pattern is being searched for in each of the three cases (i.e., what do the patterns "MAC[B-Z]", "MAC[B|Z]", and "^MAC[B-Z]" indicate?)?
 
-> ANSWER: 
+> ANSWER: "MAC[B-Z]" is finding any instances where "MAC" is followed with a capital letter that excludes the letter "A". On the other hand, "MAC[B|Z]" will only find instances where "MAC" is followed with only the capital letters B or Z (Eg MACB or MACZ). Finally, "^MAC[B-Z]" finds instances in which "MAC" is followed with a capital letter that excludes the letter "A" and is also the beginning of the text. 
 
 ```{r}
 head(str_subset(macbeth, "MAC[B-Z]"))
