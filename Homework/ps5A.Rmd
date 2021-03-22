@@ -53,7 +53,7 @@ In Section 19.1.1, the `str_subset`, `str_detect`, and `str_which` functions are
 
 (Yes, the textbook explains the differences in these commands/calls to these commands, but it can be helpful if you run the lines yourself as well to be sure they work as you'd expect and to inspect the results.) 
 
-> ANSWER: 
+> ANSWER: In the case of str_subset, it finds a pattern within a character vector. So in this case, it finds the first 6 instances where the pattern "  MACBETH" is used and prints those lines. Meanwhile, str_which finds the indices or where the pattern "  MACBETH" was found within the character vector thus printing the indices of where the pattern was found. Finally, str_detect returns a logical vector about the presence or absense of "  MACBETH" within each instance. Since we see that "  MACBETH" first appears in indice 228, it is expected to see FALSE for the first 6 instances. 
 
 ```{r}
 # defining "macbeth" object
