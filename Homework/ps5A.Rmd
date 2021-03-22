@@ -82,10 +82,12 @@ Section 19.1.1 also introduces regular expressions.  Why do the two lines below 
 
 (Yes, the textbook explains the differences, but it can be helpful if you run the lines yourself as well to be sure they work as you'd expect and to inspect the results.) 
 
-> ANSWER:  
+> ANSWER:  Regular expression syntax stipulates that a period "." is a metacharacter that matches any character. Thus, in the second example, we see that str_subset finds any instance where "MACBETH" is found. However, when we utilize the two backslashes "\\" we are able to negate this metacharacter and make it so that the period is part of the exact search. Thus, the first example finds instances where only "MACBETH." is recorded.
 
 ```{r}
+head(str_subset(macbeth, "MACBETH\\."))
 
+head(str_subset(macbeth, "MACBETH."))
 ```
 
 ### c. 
