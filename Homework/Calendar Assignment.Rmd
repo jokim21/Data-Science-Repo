@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Include your import of the data and preliminary wrangling here
 # Describe your question(s) here. Briefly describe your data collection process, including how you defined variables of interest.
 
-# The 2 questions that I wanted to answer was 'How do I spend my time split between sleep, eating, leisure, work and school time?' and 'How do I split my time when operating my business?' Therefore, I collected data in my calendar and recorded every 3-4 hours. I chose mainly sleep, eat, school, leisure, Numins work, exercise, and errands. I further segmented working on my business, Numins, time by social media, shipping, and website updating. I included cooking time inside eating time and combined class and study time as school time. Errands included going to get groceries, vet, and miscellaneous work unable to be classified as leisure. 
+> The 2 questions that I wanted to answer were **'How is my time split between activities throughout the day?'** and **'How is my time split when operating my business?'** 
+> Therefore, I collected data in my calendar and recorded 2-3 times a day. I chose to segment my time between eating, errands, exercise, leisure, school, sleep, and business. I further segmented working on my business, Numins, by whether I am working on advertising, social media, shipping, or the website. I included cooking time within eating time and combined class and study time as school time to simplify data collection. Errands included going to get groceries, vet visits, and miscellaneous work unable to be classified as leisure. 
 
 ```{r}
 library(tidyverse)
@@ -26,7 +27,7 @@ mutate(start_datetime = with_tz(start, tzone = "America/New_York")
 JoshuaCalendar <- my_calendar %>%
   select(summary, date, start_datetime, end_datetime, length_sec) %>%
   filter(date >= as.Date("2021-02-21")) %>%
-  mutate(hours = length_sec/3600) 
+  mutate(hours = length_sec/3600)
 
 JoshCalSummary <- JoshuaCalendar %>%
   filter(str_detect(summary, 'Eat|Errands|Exercise|Leisure|School|Sleep')) %>%
@@ -61,13 +62,19 @@ JoinedJoshCal <- rbind(JoshCalSummary, NuminsData)
 
 # Describe what information is conveyed through data visualization #1 (that you’ll create below) here.
 
-# In this plot, I will be showing the distribution of time divided by 
+# In this plot, I will be showing the distribution of time split by activities. The Y axis represents the average hours spent per day while the X axis represents the category of activity.
 
 # Write your code to create data visualization #1 here.
 # Be sure to label your axes and include a title to give your data's context.
 
 ```{r}
-g <- ggplot(data = JoshuaCalendar, aes(y = hours, x = summary))
+g <- ggplot(data = JoinedJoshCal, aes(y = avg_hours_spent, x = summary, fill = summary)) +
+  geom_col() +
+  labs(x = "Activities", y = "Average Hours Spent Per Day") +
+  ggtitle("How I Spend My Time During Quarantine") +
+  labs(fill = 'Activities')
+
+g
 ```
 
 # Describe what information is conveyed through data visualization #2 (that you’ll create below) here.
