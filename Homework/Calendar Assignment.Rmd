@@ -10,8 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Include your import of the data and preliminary wrangling here
 # Describe your question(s) here. Briefly describe your data collection process, including how you defined variables of interest.
 
-> The 2 questions that I wanted to answer were **'How is my time split between activities throughout the day?'** and **'How is my time split when operating my business?'** 
-> Therefore, I collected data in my calendar and recorded 2-3 times a day. I chose to segment my time between eating, errands, exercise, leisure, school, sleep, and business. I further segmented working on my business, Numins, by whether I am working on advertising, social media, shipping, or the website. I included cooking time within eating time and combined class and study time as school time to simplify data collection. Errands included going to get groceries, vet visits, and miscellaneous work unable to be classified as leisure. 
+> The 2 questions that I wanted to answer were **'How is my time split between activities throughout the day?'** and **'Is there a correlation between how much I work on school and how much I sleep?'** 
+> Therefore, I collected data in my calendar and recorded 2-3 times a day. I chose to segment my time between eating, errands, exercise, leisure, school, sleep, and business. I further segmented working on my business, Numins, by whether I am working on advertising, social media, shipping, or the website. I included cooking time within eating time and combined class and study time as school time to simplify data collection. Errands included going to get groceries, vet visits, and miscellaneous work unable to be classified as leisure. I originally planned to compare my time spent on the business, but the visualization was too similar to the overall time spent, so I switched my question to a comparison of sleep vs school work. 
 
 ```{r}
 library(tidyverse)
@@ -38,15 +38,6 @@ JoshCalSummary <- JoshuaCalendar %>%
     avg_hours_spent = total_hours_spent/15
   )
 
-NuminsSpecific <- JoshuaCalendar %>%
-  filter(str_detect(summary, 'Numins')) %>%
-  group_by(summary) %>%
-  summarize( 
-    N = n(),
-    total_hours_spent = sum(hours),
-    avg_hours_spent = total_hours_spent/15
-  )
-
 NuminsData <- JoshuaCalendar %>%
   filter(str_detect(summary, 'Numins')) %>%
   summarize(
@@ -57,12 +48,20 @@ NuminsData <- JoshuaCalendar %>%
   )
 
 JoinedJoshCal <- rbind(JoshCalSummary, NuminsData)
+
+WorkVsSleep <- JoshuaCalendar %>%
+  filter(str_detect(summary, "School|Sleep")) %>%
+group_by(date, summary) %>%
+  summarize( 
+    N = n(),
+    total_hours_spent = sum(hours)
+  )
 ```
 
 
 # Describe what information is conveyed through data visualization #1 (that you’ll create below) here.
 
-# In this plot, I will be showing the distribution of time split by activities. The Y axis represents the average hours spent per day while the X axis represents the category of activity.
+> In this plot, I will be showing the distribution of time split by activities. The Y axis represents the average hours spent per day while the X axis represents the category of activity. I was able to record all 24 hours each day, so it shows how much time I spend on each activity throughout the whole day cycle. They are sorted by alphabetical order and differentiated by color to make comparisons more easy. 
 
 # Write your code to create data visualization #1 here.
 # Be sure to label your axes and include a title to give your data's context.
@@ -78,11 +77,21 @@ g
 ```
 
 # Describe what information is conveyed through data visualization #2 (that you’ll create below) here.
+
+> I wanted to see if there was a correlation between the amount of school work I did vs how much I slept as, I conjectured that the more work I have to do, the less sleep I get. There doesn't seem to be a major direct correlation between the two. However, there seems to be a trend that the more school work I do, the more sleep I get. For instance, on Feb 23-24. Feb 26-27, and Mar 2-3, an increase in school work increased my sleeping time as well. Yet, there were some outliers such as Feb 21, where I had the most amount of sleep and one of the least time spent on school. 
+
 # Write your code to create data visualization #2 here.
 # Be sure to label your axes and include a title to give your data's context.
 
 ```{r}
+w <- ggplot(data = WorkVsSleep, aes(y = total_hours_spent, x = date, color = summary)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Date", y = "Hours Spent") +
+  ggtitle("Sleep vs School Work") +
+  labs(color = 'Activities') 
 
+w
 ```
 
 
@@ -95,3 +104,5 @@ g
 
 
 # To conclude, briefly summarize what you found in response to the questions posed here.
+
+> 
