@@ -8,37 +8,83 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Include your import of the data and preliminary wrangling here
-Describe your question(s) here. Briefly describe your data collection process, including how you defined
-variables of interest.
+# Describe your question(s) here. Briefly describe your data collection process, including how you defined variables of interest.
 
-# The 2 questions that I wanted to answer was 'How do I spend my time split between sleep, eating, leisure, work and school time?' and 'How do I split my time when operating my business?' Therefore, I collected data in my calendar and recorded every couple hours. I chose mainly sleep, eat, school, leisure, Numins work, exercise, and errands. I further segmented Numins time by social media, shipping, and website updating. I included cooking time inside eating time and combined class and study time as school time. Errands included going to get groceries, vet, and miscellaneous work unable to be classified as leisure. 
+# The 2 questions that I wanted to answer was 'How do I spend my time split between sleep, eating, leisure, work and school time?' and 'How do I split my time when operating my business?' Therefore, I collected data in my calendar and recorded every 3-4 hours. I chose mainly sleep, eat, school, leisure, Numins work, exercise, and errands. I further segmented working on my business, Numins, time by social media, shipping, and website updating. I included cooking time inside eating time and combined class and study time as school time. Errands included going to get groceries, vet, and miscellaneous work unable to be classified as leisure. 
 
-```{r cars}
+```{r}
 library(tidyverse)
 library(lubridate)
 library(ical)
 
-my_calendar <- (file = "C:/Users/Admin/Downloads/Senior Year/Data Science/calendar Assignment/jokim21@amherst.edu.ics") %>%
+my_calendar <- ical_parse_df(file = "Homework/jokim21@amherst.edu.ics") %>%
 mutate(start_datetime = with_tz(start, tzone = "America/New_York")
 , end_datetime = with_tz(end, tzone = "America/New_York")
 , length_sec = end_datetime - start_datetime
 , date = floor_date(start_datetime, unit = "day"))
+
+JoshuaCalendar <- my_calendar %>%
+  select(summary, date, start_datetime, end_datetime, length_sec) %>%
+  filter(date >= as.Date("2021-02-21")) %>%
+  mutate(hours = length_sec/3600) 
+
+JoshCalSummary <- JoshuaCalendar %>%
+  filter(str_detect(summary, 'Eat|Errands|Exercise|Leisure|School|Sleep')) %>%
+  group_by(summary) %>%
+  summarize( 
+    N = n(),
+    total_hours_spent = sum(hours),
+    avg_hours_spent = total_hours_spent/15
+  )
+
+NuminsSpecific <- JoshuaCalendar %>%
+  filter(str_detect(summary, 'Numins')) %>%
+  group_by(summary) %>%
+  summarize( 
+    N = n(),
+    total_hours_spent = sum(hours),
+    avg_hours_spent = total_hours_spent/15
+  )
+
+NuminsData <- JoshuaCalendar %>%
+  filter(str_detect(summary, 'Numins')) %>%
+  summarize(
+    summary = "Numins",
+    N = n(),
+    total_hours_spent = sum(hours),
+    avg_hours_spent = total_hours_spent/15
+  )
+
+JoinedJoshCal <- rbind(JoshCalSummary, NuminsData)
 ```
 
 
-Describe what information is conveyed through data visualization #1 (that you’ll create below) here.
+# Describe what information is conveyed through data visualization #1 (that you’ll create below) here.
+
+# In this plot, I will be showing the distribution of time divided by 
 
 # Write your code to create data visualization #1 here.
 # Be sure to label your axes and include a title to give your data's context.
 
-Describe what information is conveyed through data visualization #2 (that you’ll create below) here.
+```{r}
+g <- ggplot(data = JoshuaCalendar, aes(y = hours, x = summary))
+```
+
+# Describe what information is conveyed through data visualization #2 (that you’ll create below) here.
 # Write your code to create data visualization #2 here.
 # Be sure to label your axes and include a title to give your data's context.
 
-Describe what information is conveyed through the table (that you’ll create below) here.
-# write your code to create the table here
-# if you want to make your table's appearance nicer, check out:
-# the xtable package (https://cran.r-project.org/web/packages/xtable/vignettes/xtableGallery.pdf); or
-# the kable function in the knitr package (https://bookdown.org/yihui/rmarkdown-cookbook/kable.html)
+```{r}
 
-To conclude, briefly summarize what you found in response to the questions posed here.
+```
+
+
+# Describe what information is conveyed through the table (that you’ll create below) here.
+# write your code to create the table here
+
+```{r}
+
+```
+
+
+# To conclude, briefly summarize what you found in response to the questions posed here.
