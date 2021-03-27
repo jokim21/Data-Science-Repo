@@ -99,10 +99,17 @@ w
 # write your code to create the table here
 
 ```{r}
-
+JoshuaTable <- JoinedJoshCal %>%
+  rename(Activity = summary,
+         "Total Hours Spent" = total_hours_spent,
+         "Average Hours Spent" = avg_hours_spent,
+         Instances = N)
+  
+JoshuaTable
 ```
 
 
 # To conclude, briefly summarize what you found in response to the questions posed here.
 
-> 
+> I found that I spend much more time on leisure and sleep than I wish to, while I realized I should try to spend more time on Numins and School. I quite honestly had no idea I spent 9.57 hours daily on sleeping as I believed I slept around 8 hours a day. I blame Covid and the winter season for my increased time in sleeping as I believe I slept around 5-7 hours daily when I was attending school in person. I also realized that I spend a significant amount of time cooking and eating throughout the day (2.58 hours per day). I believe that if I didnt need to cook my time spent eating would decrease significantly as I am a quick eater (usually finish meals within 15-20 minutes). 
+Although there was no obvious correlation bewteen school work and sleep, I found that because my time is slightly correlated to sleeping more when I do more school work. This makes me realize the importance of sleep and how it affects my work. Overall, this assignment made me realize that I need to structure my time better because when I do not plan my days, I spend extra time on unwanted activities. I think that this was a great assignment to do, especially because our schedules were impacted greatly by the pandemic and it helps us realize that we are able to utilize our time in a much better fashion. 
