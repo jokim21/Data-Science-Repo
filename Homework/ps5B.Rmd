@@ -98,7 +98,7 @@ c. Load `justices.csv` into this file using the `read_csv` function.  Then, run 
 
 Create a visualization to show the distribution of tenure length of U.S. Supreme Court judges.  Interpret the plot.
 
-> ANSWER: The plot that I created is a histogram which shows the distribution of U.S Supreme Court Judges tenure length. I made the bins = 1 to represent each year a judge has served. 
+> ANSWER: The plot that I created is a density plot which shows the distribution of U.S Supreme Court Judges tenure length. I adjusted it so that it wouldn't be as smooth to illustrate a more accurate picture of the length of tenure, as the tenure of the judges weren't always clean whole numbers. 
 
 ```{r}
 justices <- read_csv("/home/class21/jokim21/Git/Data-Science-Repo/justices.csv")
@@ -123,8 +123,10 @@ justices2 <- justices %>%
   mutate(date_confirmed = lubridate::mdy(date_confirmed_vote))
 
 g <- ggplot(justices2, aes(x =tenure_length)) +
-  geom_histogram(binwidth = 1) +
+  geom_density(adjust = .1) +
   labs(x = "Tenure Length")
+
+g
 
 ```
 
@@ -135,7 +137,7 @@ g <- ggplot(justices2, aes(x =tenure_length)) +
 a. Confirm (using an R command) that automated scraping of the Brainy Quote webpage (https://www.brainyquote.com/) is allowed.
 
 ```{r}
-
+paths_allowed("https://www.brainyquote.com/")
 ```
 
 
@@ -188,6 +190,23 @@ Go to BrainyQuote.com and search a different topic (or search an Author) that in
 ## (We do want the grader to be able to see the code, though, as you'll only 
 ## submit this one knit PDF to Gradescope.)
 
+DababyQuotesHtml <- read_html("https://www.brainyquote.com/authors/dababy-quotes")
+
+Dababyquotes <- DababyQuotesHtml %>%
+  html_nodes(".oncl_q") %>%
+  html_text() 
+
+DaBaby <- DababyQuotesHtml %>%
+  html_nodes(".oncl_a") %>%
+  html_text()
+
+DaBabyquotes_dat <- data.frame(quote = Dababyquotes, stringsAsFactors = FALSE) %>%
+  filter(quote != "\n") %>%
+  mutate(DaBaby = DaBaby
+         , together = paste('"', as.character(quote), '" --'
+                          , as.character(DaBaby), sep=""))
+
+write.csv(DaBabyquotes_dat, "DaBabyQuotes.csv")
 
 ```
 
@@ -196,7 +215,11 @@ Go to BrainyQuote.com and search a different topic (or search an Author) that in
 c. Load `quotes.csv` into this file using the `read_csv` function.  Write code to select *three* of the quotes at random and print them (i.e., set `size = 3` in the `sample` function).
 
 ```{r, linewidth = 60}
+quotes_daBaby <- read_csv("/home/class21/jokim21/Git/Data-Science-Repo/DaBabyQuotes.csv")
 
+quote_for_the_day <- quotes_dat[sample(1:nrow(quotes_dat), size = 3),]
+
+cat(quote_for_the_day$together)
 ```
 
 
