@@ -79,16 +79,17 @@ tweets <- trump_tweets_df %>%
 \newpage
 1b. Using the `statusSource` variable, compute the number of tweets from each source.  How many different sources are there?  How often are each used?
 
-> ANSWER:  
+> ANSWER: There are 5 different sources that tweets originated from: Instagram is used 1 time, Twitter Web Client is used 120 times, Ipad is used 1 time, Android is used 762 times, and Iphone is used 628 times. 
 
 ```{r}
-
+tweets %>%
+  count(statusSource)
 ```
 
 \newpage
 1c. We're going to compare the language used between the Android and iPhone sources, so only want to keep tweets coming from those sources.  Explain what the `extract` function (from the `tidyverse` package) is doing below.  Include in your own words what each argument is doing.  (Note that "regex" stands for "regular expression".)
 
-> ANSWER: 
+> ANSWER: The extract function finds and creates new groups/columns outside of regular expressions within a character column. In this case, we specify we want groups from the column statusSource through the col=statusSource argument to separate the different sources of the tweets. The into="source" argument creates a new column to put in the names of the new variables. The regex argument is specifying what the regular expression is to isolate the differences of the expressions. Then remove=False argument allows us to keep the statusSource column.  Finally filter allows us to only see the tweets that originated from Androids and iPhones.
 
 ```{r}
 tweets2 <- tweets %>%
