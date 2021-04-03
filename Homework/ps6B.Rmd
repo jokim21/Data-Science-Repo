@@ -107,11 +107,35 @@ tweets2 <- tweets %>%
 
 *Don't forget to remove stop words before creating the word cloud.  Also remove the terms "https" and "t.co".*
 
-> ANSWER:  
+> ANSWER: There are some common words between these two word clouds, some of which are hillary, crooked, trump and trump2016 (similar) and people. Howeverm there are some differences between the two word clouds as the Android wordcloud seems to have many more names of people and mentions media more often than the iphone word cloud. Meanwhile the iPhone wordcloud seems to contain more state names. 
 
 ```{r, fig.width=8, fig.height=8}
+stop_words2 <- stop_words %>%
+  add_row(word = "https", lexicon = "JOSH") %>%
+  add_row(word = "t.co", lexicon = "JOSH")
 
+tidytweets <- tweets2 %>%
+  unnest_tokens(output = word, input = text) %>%
+  anti_join(stop_words2, by="word") %>%
+  count(word, source, sort = TRUE)
 
+iPhonetweets <- tweets2 %>%
+  unnest_tokens(output = word, input = text) %>%
+  anti_join(stop_words2, by="word") %>%
+  count(word, source, sort = TRUE) %>%
+  filter(source == "iPhone")
+
+Androidtweets <- tweets2 %>%
+  unnest_tokens(output = word, input = text) %>%
+  anti_join(stop_words2, by="word") %>%
+  count(word, source, sort = TRUE) %>%
+  filter(source == "Android")
+
+iPhonetweets %>%
+  with(wordcloud(words = word, freq = n, max.words=50))
+
+Androidtweets %>%
+  with(wordcloud(words = word, freq = n, max.words=50))
 ```
 
 \newpage
@@ -122,18 +146,75 @@ How do the top used bigrams compare between the two sources?
 > ANSWER:  
 
 ```{r}
+tweetbigrams <- tweets2 %>%
+  unnest_tokens(output = bigram, input = text, token = "ngrams", n = 2) %>%
+  filter(bigram == str_detect(tweetbigrams$bigram, stop_words2))
+   
+   
 
+
+
+
+g <- ggplot(tidytweets, aes(x = reorder(word,n), y = n, color = word, fill=word)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+  labs(y = "Number of instances"
+       , title="The most common words in Trump's tweets") +
+  facet_wrap(vars(source))
+
+g
 ```
 
 
 \newpage
 2c. Consider the sentiment.  Compute the proportion of words among the tweets within each source classified as "angry" and the proportion of words classified as "joy"  based on the NRC lexicon.  How does the proportion of "angry" and "joy" words compare between the two sources?  What about "positive" and "negative" words?  
 
-> ANSWER: 
+> ANSWER: Joy words consist of 3.72% of words from Trump's tweets. Meanwhile, words of anger consist of 4.61% of words from Trump's tweets. Words of positive sentiment consist of 9.97% of words from Trump's tweets. Finally, words of negative sentiment consist of 7.86% of words from Trump's tweets.
 
 ```{r}
+nrc_lexicon <- get_sentiments("nrc")
 
+tweetwords <- tweets2 %>%
+  unnest_tokens(output = word, input = text) %>%
+  anti_join(stop_words2, by="word")
 
+joy <- nrc_lexicon %>%
+  filter(sentiment == "joy")
+
+nonjoytweets <- tweetwords %>%
+  anti_join(joy, by = "word")
+
+#Proportion of Joy words
+(nrow(tweetwords)-nrow(nonjoytweets))/nrow(tweetwords)
+
+angry <- nrc_lexicon %>%
+  filter(sentiment == "anger")
+
+nonangrytweets <- tweetwords %>%
+  anti_join(angry, by = "word")
+
+#Proportion of Angry words
+(nrow(tweetwords)-nrow(nonangrytweets))/nrow(tweetwords)
+
+positive <- nrc_lexicon %>%
+  filter(sentiment == "positive")
+
+nonpositivetweets <- tweetwords %>%
+  anti_join(positive, by = "word")
+
+#Proportion of Positive words
+(nrow(tweetwords)-nrow(nonpositivetweets))/nrow(tweetwords)
+
+negative <- nrc_lexicon %>%
+  filter(sentiment == "negative")
+
+nonnegativetweets <- tweetwords %>%
+  anti_join(negative, by = "word")
+
+#Proportion of Negative words
+(nrow(tweetwords)-nrow(nonnegativetweets))/nrow(tweetwords)
+  
 ```
 
 
